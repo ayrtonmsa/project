@@ -1,43 +1,24 @@
-class LoginRouter {
-  route (httpRequest) {
-    if (!httpRequest || !httpRequest.body) {
-      return HttpResponse.serverError()
+const LoginRouter = require('./login-router')
+const MissingParamError = require('../helpers/missing-param-error')
+const UnauthorizedError = require('../helpers/unauthorized-error')
+
+const makeSut = () => {
+  class AuthUseCaseSpy {
+    auth (email, password) {
+      this.email = email
+      this.password = password
     }
-    const { email, password} = httpRequest.body
-    if (!email) {
-      return HttpResponse.badRequest('email')
-    }
-    if (!password) {
-      return HttpResponse.badRequest('password')
-    }
+  }
+  const authUseCaseSpy = new AuthUseCaseSpy()
+  const sut = new LoginRouter(authUseCaseSpy)
+  return {
+    sut,
+    authUseCaseSpy
   }
 }
-
-class HttpResponse {
-  static badRequest(paramName) {
-    return {
-      statusCode: 400,
-      body: new MissingParamError(paramName)
-    }
-  }
-
-  static serverError() {
-    return {
-      statusCode: 500
-    }
-  }
-}
-
-class MissingParamError extends Error{
-  constructor (paramName) {
-    super(`Atributo: ${paramName} não existe!`)
-    this.name = 'MissingParamError'
-  }
-}
-
 describe('Login Router', () => {
   test('Deve retornar 400 se não receber o email', () => {
-    const sut = new LoginRouter()
+    const { sut } = makeSut()
     const httpRequest = {
       body: {
         password: '123456'
@@ -49,7 +30,7 @@ describe('Login Router', () => {
   })
 
   test('Deve retornar 400 se não receber a senha', () => {
-    const sut = new LoginRouter()
+    const { sut } = makeSut()
     const httpRequest = {
       body: {
         email: 'email@email.com'
@@ -61,14 +42,75 @@ describe('Login Router', () => {
   })
 
   test('Deve retornar 500 se não receber o request', () => {
-    const sut = new LoginRouter()
+    const { sut } = makeSut()
     const httpResponse = sut.route()
     expect(httpResponse.statusCode).toBe(500)
   })
 
   test('Deve retornar 500 se não receber o body do request', () => {
+    const { sut } = makeSut()
+    const httpResponse = sut.route({})
+    expect(httpResponse.statusCode).toBe(500)
+  })
+
+  test('Deve chamar o AuthUseCase com os parametos corretos', () => {
+    const { sut, authUseCaseSpy } = makeSut()
+    const httpRequest = {
+      body: {
+        email: 'email@email.com',
+        password: '123456'
+      }
+    }
+    sut.route(httpRequest)
+    expect(authUseCaseSpy.email).toBe(httpRequest.body.email)
+    expect(authUseCaseSpy.password).toBe(httpRequest.body.password)
+  })
+
+  test('Deve receber 401 ao passar credenciais invalidas', () => {
+    const { sut } = makeSut()
+    const httpRequest = {
+      body: {
+        email: 'emailwrong@email.com',
+        password: 'wrongpassword'
+      }
+    }
+    const httpResponse = sut.route(httpRequest)
+    expect(httpResponse.statusCode).toBe(401)
+    expect(httpResponse.body).toEqual(new UnauthorizedError())
+  })
+
+  test('Deve receber 200 ao passar credenciais válidas', () => {
+    const { sut } = makeSut()
+    const httpRequest = {
+      body: {
+        email: 'emailcorrect@email.com',
+        password: 'correctpassword'
+      }
+    }
+    const httpResponse = sut.route(httpRequest)
+    expect(httpResponse.statusCode).toBe(200)
+  })
+
+  test('Deve receber 500 se não receber o AuthUseCase', () => {
     const sut = new LoginRouter()
-    const httpRequest = {}
+    const httpRequest = {
+      body: {
+        email: 'email@email.com',
+        password: '123456'
+      }
+    }
+    const httpResponse = sut.route(httpRequest)
+    expect(httpResponse.statusCode).toBe(500)
+  })
+
+  test('Deve receber 500 se não receber o método auth do AuthUseCase', () => {
+    const sut = new LoginRouter({})
+    const httpRequest = {
+      body: {
+        email: 'email@email.com',
+        password: '123456'
+      }
+    }
     const httpResponse = sut.route(httpRequest)
     expect(httpResponse.statusCode).toBe(500)
   })
