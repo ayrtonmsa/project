@@ -9,10 +9,15 @@
     "test:staged": "jest"
   },
   "standard": {
-    "env": ["jest"]
+    "env": [
+      "jest"
+    ]
   },
   "dependencies": {
-    "express": "^4.17.1"
+    "express": "^4.17.1",
+    "mysql2": "^2.2.5",
+    "sequelize": "^6.6.5",
+    "sequelize-cli": "^6.2.0"
   },
   "devDependencies": {
     "husky": "^7.0.1",
