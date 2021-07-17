@@ -12,7 +12,7 @@ routes.post('/users', UserController.store);
 
 routes.use(authMiddleware);
 
-routes.post('/logout', UserController.logout);
+routes.get('/logout', UserController.logout);
 
 routes.get('/users', UserController.index);
 

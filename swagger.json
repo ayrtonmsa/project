@@ -1,0 +1,516 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "version": "1.0.0",
+    "title": "Project System",
+    "description": "My Project Application API to you",
+    "license": {
+      "name": "MIT",
+      "url": "https://opensource.org/licenses/MIT"
+    }
+  },
+  "host": "localhost:3000",
+  "basePath": "/",
+  "tags": [
+    {
+      "name": "Authentication",
+      "description": "API for Authenticate in the system"
+    },
+    {
+      "name": "Users",
+      "description": "API for users in the system"
+    },
+    {
+      "name": "Projects",
+      "description": "API for projects in the system"
+    }
+  ],
+  "securityDefinitions": {
+    "Bearer": {
+      "type": "apiKey",
+      "name": "Authorization",
+      "in": "header"
+    }
+  },
+  "schemes": ["http"],
+  "consumes": ["application/json"],
+  "produces": ["application/json"],
+
+  "paths": {
+    "/api/login": {
+      "post": {
+        "tags": ["Authentication"],
+        "summary": "System access",
+        "parameters": [
+          {
+            "name": "login",
+            "in": "body",
+            "description": "to login",
+            "schema": {
+              "type": "object",
+              "required": ["email", "password"],
+              "properties": {
+                "email": {
+                  "example": "userone@test.com",
+                  "type": "string"
+                },
+                "password": {
+                  "example": "#hashtag",
+                  "type": "string"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Logged successfully",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "user": {
+                  "type": "object",
+                  "properties": {
+                    "name": {
+                      "example": "I am User One",
+                      "type": "string"
+                    },
+                    "email": {
+                      "example": "userone@test.com",
+                      "type": "string"
+                    }
+                  }
+                },
+                "token": {
+                  "example": "eyJhbGciOiJI...",
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Error: Unauthorized",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "errors": {
+                  "type": "array",
+                  "items": {
+                    "example": "Invalid username or password!",
+                    "type": "array"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/logout": {
+      "get": {
+        "security": [
+          {
+            "Bearer": []
+          }
+        ],
+        "tags": ["Authentication"],
+        "summary": "System exit",
+        "responses": {
+          "200": {
+            "description": "Logout successfully",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "auth": {
+                  "example": false,
+                  "type": "boolean"
+                },
+                "token": {
+                  "example": null,
+                  "type": "null"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Error: Unauthorized",
+            "schema": {
+              "type": "string",
+              "example": "Unauthorized"
+            }
+          },
+          "403": {
+            "description": "Error: Forbidden",
+            "schema": {
+              "type": "string",
+              "example": "Access denied."
+            }
+          }
+        }
+      }
+    },
+    "/api/users": {
+      "get": {
+        "security": [
+          {
+            "Bearer": []
+          }
+        ],
+        "tags": ["Users"],
+        "summary": "Get all users in system",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "example": 1,
+                    "type": "integer"
+                  },
+                  "name": {
+                    "example": "I am User One",
+                    "type": "string"
+                  },
+                  "email": {
+                    "example": "userone@test.com",
+                    "type": "string"
+                  },
+                  "createdAt": {
+                    "example": "2021-07-16T17:37:04.000Z",
+                    "type": "string"
+                  },
+                  "updateAt": {
+                    "example": "2021-07-16T17:37:04.000Z",
+                    "type": "string"
+                  },
+                  "deletedAt": {
+                    "example": null,
+                    "type": "null"
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Error: Unauthorized",
+            "schema": {
+              "type": "string",
+              "example": "Unauthorized"
+            }
+          },
+          "403": {
+            "description": "Error: Forbidden",
+            "schema": {
+              "type": "string",
+              "example": "Access denied."
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": ["Users"],
+        "summary": "Create new user in system",
+        "parameters": [
+          {
+            "name": "user",
+            "in": "body",
+            "description": "User that we want to create",
+            "schema": {
+              "type": "object",
+              "required": ["name", "email", "password"],
+              "properties": {
+                "name": {
+                  "example": "I am a new User",
+                  "type": "string"
+                },
+                "email": {
+                  "example": "newuser@test.com",
+                  "type": "string"
+                },
+                "password": {
+                  "example": "#hashtag",
+                  "type": "string"
+                }
+              }
+            }
+          }
+        ],
+        "produces": ["application/json"],
+        "responses": {
+          "200": {
+            "description": "New user is created",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "message": {
+                  "type": "string",
+                  "example": "User successfully registered!"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Error: Unauthorized",
+            "schema": {
+              "type": "string",
+              "example": "Unauthorized"
+            }
+          },
+          "403": {
+            "description": "Error: Forbidden",
+            "schema": {
+              "type": "string",
+              "example": "Access denied."
+            }
+          }
+        }
+      }
+    },
+    "/api/projects": {
+      "get": {
+        "security": [
+          {
+            "Bearer": []
+          }
+        ],
+        "tags": ["Projects"],
+        "summary": "Get all projects in system by logged in user",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "integer",
+                    "example": 1
+                  },
+                  "title": {
+                    "type": "string",
+                    "example": "Project title"
+                  },
+                  "description": {
+                    "type": "string",
+                    "example": "Project description"
+                  },
+                  "budget": {
+                    "type": "string",
+                    "example": "Project budget"
+                  },
+                  "createdAt": {
+                    "type": "string",
+                    "example": "2021-07-17T14:10:56.000Z"
+                  },
+                  "updatedAt": {
+                    "type": "string",
+                    "example": "2021-07-17T14:10:56.000Z"
+                  },
+                  "deletedAt": {
+                    "type": "null",
+                    "example": null
+                  },
+                  "tags": {
+                    "type": "array",
+                    "items": {
+                      "type": "object" ,
+                      "properties": {
+                        "id": {
+                          "type": "integer",
+                          "example": 1
+                        },
+                        "name": {
+                          "type": "string",
+                          "example": "Tag name"
+                        },
+                        "ProjectTag": {
+                          "type": "object",
+                          "properties": {
+                            "createdAt": {
+                              "type": "string",
+                              "example": "2021-07-17T14:10:56.000Z"
+                            },
+                            "updatedAt": {
+                              "type": "string",
+                              "example": "2021-07-17T14:10:56.000Z"
+                            },
+                            "projectId": {
+                              "type": "integer",
+                              "example": 1
+                            },
+                            "tagId": {
+                              "type": "integer",
+                              "example": 1
+                            }
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "user": {
+                    "type": "object",
+                    "properties": {
+                      "id": {
+                        "type": "integer",
+                        "example": 1
+                      },
+                      "name": {
+                        "type": "string",
+                        "example": "I am a User"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Error: Unauthorized",
+            "schema": {
+              "type": "string",
+              "example": "Unauthorized"
+            }
+          },
+          "403": {
+            "description": "Error: Forbidden",
+            "schema": {
+              "type": "string",
+              "example": "Access denied."
+            }
+          }
+        }
+      },
+      "post": {
+        "security": [
+          {
+            "Bearer": []
+          }
+        ],
+        "tags": ["Projects"],
+        "summary": "Create new project in system by logged in user",
+        "parameters": [
+          {
+            "name": "user",
+            "in": "body",
+            "description": "Project that we want to create",
+            "schema": {
+              "type": "object",
+              "required": ["title", "description", "budget", "tags"],
+              "properties": {
+                "title": {
+                  "example": "Project title",
+                  "type": "string"
+                },
+                "description": {
+                  "example": "Project description",
+                  "type": "string"
+                },
+                "budget": {
+                  "example": "A budget",
+                  "type": "string"
+                },
+                "tags": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "name": {
+                        "type": "string",
+                        "example": "Tag name"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        ],
+        "produces": ["application/json"],
+        "responses": {
+          "200": {
+            "description": "New project is created",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "message": {
+                  "type": "string",
+                  "example": "Project successfully registered!"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Error: Unauthorized",
+            "schema": {
+              "type": "string",
+              "example": "Unauthorized"
+            }
+          },
+          "403": {
+            "description": "Error: Forbidden",
+            "schema": {
+              "type": "string",
+              "example": "Access denied."
+            }
+          }
+        }
+      }
+    }
+  },
+  "definitions": {
+    "User": {
+      "required": ["id", "name", "email", "password"],
+      "properties": {
+        "id": {
+          "type": "integer",
+          "uniqueItems": true
+        },
+        "name": {
+          "type": "string"
+        },
+        "email": {
+          "type": "string"
+        },
+        "password": {
+          "type": "string"
+        }
+      }
+    },
+    "Project": {
+      "required": ["id", "userId", "title", "description", "budget", "tags"],
+      "properties": {
+        "id": {
+          "type": "integer",
+          "uniqueItems": true
+        },
+        "userId": {
+          "type": "integer"
+        },
+        "title": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        },
+        "budget": {
+          "type": "string"
+        },
+        "tags": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "name": {
+                "type": "string"
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
