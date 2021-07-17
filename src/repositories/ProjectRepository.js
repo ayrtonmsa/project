@@ -1,4 +1,5 @@
 const Project = require('../models/Project')
+const ProjectTag = require('../models/ProjectTag')
 const Tag = require('../models/Tag')
 const User = require('../models/User')
 
@@ -41,13 +42,20 @@ class ProjectRepository {
         let { id } = project;
         let { name } = tag;
 
-        let tagToProject = await Tag.findOrCreate({
+        let existTag = await Tag.findOne({
           where: { name: name }
         });
 
-        await project.addTag(tagToProject, {
-          transaction: t
-        });
+        if ( ! existTag) {
+          existTag = await Tag.create({
+            name
+          }, {transaction: t});
+        }
+
+        await ProjectTag.create({
+          projectId: id,
+          tagId: existTag.id
+        }, {transaction: t})
       }
 
       return project

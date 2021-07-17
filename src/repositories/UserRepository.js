@@ -65,7 +65,7 @@ class UserRepository {
   }
 
   async logout(req, res) {
-    // global.auth_user_id = null;
+    global.auth_user_id = null;
     return res.json({
       auth: false, token: null
     })
