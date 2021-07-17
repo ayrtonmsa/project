@@ -17,7 +17,7 @@ module.exports = {
       budget: {
         type: Sequelize.STRING
       },
-      user_id: {
+      userId: {
         type: Sequelize.INTEGER,
         references:
           {

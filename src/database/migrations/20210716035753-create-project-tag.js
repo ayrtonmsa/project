@@ -8,7 +8,7 @@ module.exports = {
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      tag_id: {
+      tagId: {
         type: Sequelize.INTEGER,
         references:
           {
@@ -19,7 +19,7 @@ module.exports = {
         onDelete: 'CASCADE',
         allowNull: false
       },
-      project_id: {
+      projectId: {
         type: Sequelize.INTEGER,
         references:
           {

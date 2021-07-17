@@ -1,9 +1,22 @@
-const { Router } = require('express')
+const express = require('express');
 
-const routes = new Router()
+const UserController = require('./controllers/UserController');
+const ProjectController = require('./controllers/ProjectController');
 
-routes.get('/health' , (req, res) => {
-  res.send({ message: 'Connect with success!' })
-})
+const authMiddleware = require('./middlewares/auth');
 
-module.exports = routes
+const routes = express.Router();
+
+routes.post('/login', UserController.login);
+routes.post('/users', UserController.store);
+
+routes.use(authMiddleware);
+
+routes.post('/logout', UserController.logout);
+
+routes.get('/users', UserController.index);
+
+routes.get('/projects', ProjectController.index);
+routes.post('/projects', ProjectController.store);
+
+module.exports = routes;

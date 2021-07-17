@@ -1,19 +1,18 @@
-import Sequelize, { Model } from 'sequelize';
+const { Model, DataTypes } = require('sequelize');
 
 class Tag extends Model {
   static init(sequelize) {
     super.init({
-      name: Sequelize.STRING,
+      name: DataTypes.STRING,
     }, {
       sequelize
-    });
-
-    return this;
+    })
   }
 
   static associate(models) {
-    this.belongsToMany(models.Tag, { through: 'ProjectTag', as: 'tags', foreignKey: "project_id"});
+    this.belongsToMany(models.Project, { through: 'ProjectTag', as: 'projects', foreignKey: "tagId"});
+    this.hasMany(models.ProjectTag, { foreignKey: 'tagId'});
   }
 }
 
-export default Tag;
+module.exports = Tag;
