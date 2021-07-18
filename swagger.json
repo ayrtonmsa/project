@@ -416,6 +416,7 @@
                 "tags": {
                   "type": "array",
                   "items": {
+                    "required": ["name"],
                     "type": "object",
                     "properties": {
                       "name": {
@@ -473,7 +474,8 @@
           "type": "string"
         },
         "email": {
-          "type": "string"
+          "type": "string",
+          "uniqueItems": true
         },
         "password": {
           "type": "string"
@@ -502,6 +504,7 @@
         "tags": {
           "type": "array",
           "items": {
+            "required": ["name"],
             "type": "object",
             "properties": {
               "name": {
