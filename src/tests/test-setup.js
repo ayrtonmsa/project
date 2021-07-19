@@ -14,8 +14,8 @@ const UserTest = {
 
 class Setup {
   async start() {
-    await this.destroyUsers()
     await this.destroyProjects()
+    await this.destroyUsers()
     await this.createUserTest()
   }
 
@@ -24,34 +24,40 @@ class Setup {
   }
 
   async destroyUsers() {
-    await User.destroy({where: {}})
+    await User.destroy({
+      where: {},
+      truncate: { cascade: true }
+    })
   }
 
   async createUserTest() {
-    const user = await User.findOne({
-      where: { email: "usertestlogin@test.tes" }
-    });
-    if ( ! user) {
-      await request(app).post('/api/users').send({
-        name: "User Test Login",
-        email: "usertestlogin@test.tes",
-        password: "usertestpassword"
-      })
-    }
+    await request(app).post('/api/users').send({
+      name: UserTest.name,
+      email: UserTest.email,
+      password: UserTest.password
+    }).expect(200)
   }
 
   async destroyProjects() {
-    await ProjectTag.destroy({where: {}})
-    await Project.destroy({where: {}})
-    await Tag.destroy({where: {}})
+    await ProjectTag.destroy({
+      where: {},
+      truncate: { cascade: true }
+    })
+    await Project.destroy({
+      where: {},
+      truncate: { cascade: true }
+    })
+    await Tag.destroy({
+      where: {},
+      truncate: { cascade: true }
+    })
   }
 
   async doLogin() {
-    await this.createUserTest()
     return await request(app).post('/api/login').send({
-      email: "usertestlogin@test.tes",
-      password: "usertestpassword"
-    })
+      email: UserTest.email,
+      password: UserTest.password
+    }).expect(200)
   }
 }
 

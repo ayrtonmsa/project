@@ -46,7 +46,7 @@ The purpose of the test is to build a REST API that will:
 
 ## Tests ##
 - Run the tests:
-   - `docker exec project_app_1 yarn jest --silent`
+   - `docker exec project_app_1 yarn jest --silent --detectOpenHandles --coverage`
 - Access coverage:
    - `file:///home/{your user}/{your projects folder}/project/coverage/lcov-report/index.html`
 
@@ -55,7 +55,3 @@ The purpose of the test is to build a REST API that will:
    - `docker exec -t -i database-node /bin/bash -c "mysql -uroot -p"`
 - Drop the container:
    - `docker-compose down`
-
-## Online ##
-- Access system on heroku
-   - [API on Heroku](...link...)
