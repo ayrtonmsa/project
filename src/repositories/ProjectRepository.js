@@ -62,7 +62,7 @@ class ProjectRepository {
     }).then(function (result) {
       return res.status(200).send({message: result.title + " successfully registered!"});
     }).catch(function (err) {
-      return res.status(402).send({error: err});
+      return res.status(400).send({error: err});
     });
   }
 }
