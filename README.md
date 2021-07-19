@@ -1,4 +1,4 @@
-# English - API Test Project v1 #
+# API Test Project v1 #
 
 ## Goals ##
 The purpose of the test is to build a REST API that will:
@@ -48,7 +48,7 @@ The purpose of the test is to build a REST API that will:
 - Run the tests:
    - `docker exec project_app_1 yarn jest --silent`
 - Access coverage:
-   - [Test Coverage, local link](http://localhost:63342/project/coverage/lcov-report/index.html)
+   - `file:///home/{your user}/{your projects folder}/project/coverage/lcov-report/index.html`
 
 ## Commands ##
 - Access mysql:
