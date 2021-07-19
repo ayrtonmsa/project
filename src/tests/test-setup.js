@@ -9,14 +9,14 @@ const Tag = require('../models/Tag')
 const UserTest = {
   name: "User Test Login",
   email: "usertestlogin@test.tes",
-  password: "usertest"
+  password: "usertestpassword"
 }
 
 class Setup {
   async start() {
     await this.destroyUsers()
-    await this.createUserTest()
     await this.destroyProjects()
+    await this.createUserTest()
   }
 
   getUserTest() {
@@ -28,11 +28,16 @@ class Setup {
   }
 
   async createUserTest() {
-    await request(app).post('/api/users').send({
-      name: UserTest.name,
-      email: UserTest.email,
-      password: UserTest.password
-    }).expect(200)
+    const user = await User.findOne({
+      where: { email: "usertestlogin@test.tes" }
+    });
+    if ( ! user) {
+      await request(app).post('/api/users').send({
+        name: "User Test Login",
+        email: "usertestlogin@test.tes",
+        password: "usertestpassword"
+      })
+    }
   }
 
   async destroyProjects() {
@@ -42,10 +47,11 @@ class Setup {
   }
 
   async doLogin() {
+    await this.createUserTest()
     return await request(app).post('/api/login').send({
-      email: UserTest.email,
-      password: UserTest.password
-    }).expect(200)
+      email: "usertestlogin@test.tes",
+      password: "usertestpassword"
+    })
   }
 }
 

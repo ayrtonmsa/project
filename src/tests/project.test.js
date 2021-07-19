@@ -12,7 +12,7 @@ test('Should create a project', async () => {
   await Setup.start()
   let login = await Setup.doLogin()
   await request(app).post('/api/projects').set('Authorization', login.body.token).send({
-    title: "New Project Test",
+    title: "New Project Test" + Math.random(),
     description: "A new project test",
     budget: "Nugget",
     tags: [
@@ -29,8 +29,9 @@ test('Should create a project', async () => {
 test('Error project exists', async () => {
   await Setup.start()
   let login = await Setup.doLogin()
+  const randomNumber = Math.random()
   await request(app).post('/api/projects').set('Authorization', login.body.token).send({
-    title: "Project duplicated",
+    title: "Project duplicated" + randomNumber,
     description: "A project duplicated",
     budget: "Budget",
     tags: [
@@ -41,7 +42,7 @@ test('Error project exists', async () => {
   }).expect(200)
 
   await request(app).post('/api/projects').set('Authorization', login.body.token).send({
-    title: "Project duplicated",
+    title: "Project duplicated" + randomNumber,
     description: "A project duplicated",
     budget: "Budget",
     tags: [

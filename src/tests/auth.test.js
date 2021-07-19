@@ -5,8 +5,8 @@ const Setup = require('./test-setup')
 test('Should login', async () => {
   await Setup.start()
   const result = await request(app).post('/api/login').send({
-    email: Setup.getUserTest().email,
-    password: Setup.getUserTest().password
+    email: "usertestlogin@test.tes",
+    password: "usertestpassword"
   }).expect(200)
   expect(result.body.user).toBeDefined();
   expect(result.body.token).toBeDefined();
