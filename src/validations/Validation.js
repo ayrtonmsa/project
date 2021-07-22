@@ -53,8 +53,8 @@ class Validation {
     );
   }
 
-  async checkHasRelation(model, relation, id, message) {
-    const result = await model.scope({method: ['store', global_store_id]})
+  async checkHasRelation(model, relation, id, message, userId) {
+    const result = await model.scope({method: ['auth', userId]})
       .findByPk(id, {
         include: [{
           model: relation,

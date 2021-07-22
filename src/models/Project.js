@@ -10,8 +10,8 @@ class Project extends Model {
       budget: DataTypes.STRING
     }, {
       scopes: {
-        auth() {
-          return authScope(auth_user_id)
+        auth(userId) {
+          return authScope(userId)
         }
       },
       sequelize

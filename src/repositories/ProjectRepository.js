@@ -8,7 +8,7 @@ const { getNewDatabaseInstance } = require('../utils/DatabaseUtil')
 class ProjectRepository {
   async index (req, res) {
     const { page = 1 } = req.query;
-    const projects = await Project.scope({method: 'auth'})
+    const projects = await Project.scope({method: ['auth', req.user.id]})
       .findAll({
         order: ['title'],
         attributes: getAttributes(),
@@ -35,7 +35,7 @@ class ProjectRepository {
         title,
         description,
         budget,
-        userId: auth_user_id,
+        userId: req.user.id,
       }, {transaction: t});
 
       for (const tag of tags) {

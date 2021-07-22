@@ -10,7 +10,7 @@ class ProjectValidation {
       errorBag.push(errorCheck);
     }
 
-    const errorUnique = await checkUniques(req.body);
+    const errorUnique = await checkUniques(req.body, req.user);
     if (errorUnique) {
       errorBag.push(errorUnique);
     }
@@ -22,15 +22,16 @@ class ProjectValidation {
   }
 }
 
-async function checkUniques(body, id = false) {
+async function checkUniques(body, user, id = false) {
   const { title } = body;
+  const userId = user.id;
 
   let errorBag = [];
 
   if (title) {
     const errorTitle = await Validation.checkExistsAndResponseError(
       Project,
-      {title: title, userId: auth_user_id},
+      {title: title, userId},
       "Project with Title: " + title + " already exists for logged in User!",
       id
     );

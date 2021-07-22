@@ -51,8 +51,6 @@ class UserRepository {
 
     const { id, name } = user;
 
-    global.auth_user_id = id;
-
     return res.json({
       user: {
         name,
@@ -65,7 +63,6 @@ class UserRepository {
   }
 
   async logout(req, res) {
-    global.auth_user_id = null;
     return res.json({
       auth: false, token: null
     })
